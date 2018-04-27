@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <style>
+
+    * {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    /*box的大小必须和图片一样，保证只显示一张图片*/
+    .box {
+      width: 790px;
+      height: 340px;
+      margin: 100px auto;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /*ul要保证宽度足够，不能让li掉下去
+      需要绝对定位
+    */
+    .box ul {
+      width: 900%;
+      height: 340px;
+      position: absolute;
+    }
+    
+    .box ul li {
+      float: left;
+    }
+
+    .box ol {
+      width: 182px;
+      height: 20px;
+      background-color: rgba(255, 255, 255, 0.5);
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      margin-left: -91px;
+      border-radius: 10px;
+    }
+
+    .box ol li {
+      width: 12px;
+      height: 12px;
+      background-color: #fff;
+      border-radius: 50%;
+      float: left;
+      margin-top: 4px;
+      margin-left: 10px;
+      cursor: pointer;
+    }
+
+    .box ol li.now {
+      background-color: red;
+    }
+
+    /*箭头隐藏*/
+    .arrow {
+      display: none;
+    }
+
+    /*移到box上，箭头显示*/
+    .box:hover .arrow {
+      display: block;
+    }
+
+    .left,
+    .right {
+      width: 30px;
+      height: 60px;
+      background-color: rgba(0, 0, 0, .3);
+      position: absolute;
+      top: 50%;
+      margin-top: -30px;
+      text-decoration: none;
+      text-align: center;
+      line-height: 60px;
+      font-size: 24px;
+      font-family: "宋体";
+      color: #fff;
+    }
+
+    .left:hover,
+    .right:hover {
+      background-color: rgba(0, 0, 0, .6);
+    }
+
+    .left {
+      left: 0;
+    }
+
+    .right {
+      right: 0;
+    }
+  </style>
+</head>
+<body>
+
+<div class="box">
+
+  <!--放图片的-->
+  <ul>
+    <li>
+      <a href="#"><img src="images/1.jpg" alt=""></a>
+    </li>
+    <li>
+      <a href="#"><img src="images/2.jpg" alt=""></a>
+    </li>
+    <li>
+      <a href="#"><img src="images/3.jpg" alt=""></a>
+    </li>
+    <li>
+      <a href="#"><img src="images/4.jpg" alt=""></a>
+    </li>
+    <li>
+      <a href="#"><img src="images/5.jpg" alt=""></a>
+    </li>
+    <li>
+      <a href="#"><img src="images/6.jpg" alt=""></a>
+    </li>
+    <li>
+      <a href="#"><img src="images/7.jpg" alt=""></a>
+    </li>
+    <li>
+      <a href="#"><img src="images/8.jpg" alt=""></a>
+    </li>
+    <li>
+      <a href="#"><img src="images/1.jpg" alt=""></a>
+    </li>
+  </ul>
+
+  <!--小圆点-->
+  <ol>
+    <li class="now"></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+  </ol>
+  
+  <!--左右箭头-->
+  <div class="arrow">
+    <a class="left" href="javascript:;">&lt;</a>
+    <a class="right" href="javascript:;">&gt;</a>
+  </div>
+</div>
+
+<script src="animate.js"></script>
+    <script>
+        var box = document.querySelector(".box");//大盒子
+        var leftArr = document.querySelector(".box .left");//左箭头
+        var rightArr = document.querySelector(".box .right");//右箭头
+        var ul = document.querySelector(".box ul");//轮播条图片连起来
+        var imgs = ul.children;//轮播条单张
+        var count = 0;//跳转数
+        var points = document.querySelectorAll(".box ol li");//轮播条的点
+        
+        // 右箭头点击事件
+        rightArr.onclick = function () {
+            // 判断点到末尾情况
+            if (count >= imgs.length - 1) {
+                count = 0;
+                ul.style.left = 0
+            }
+            count++;
+            console.log(count);
+            
+            // 给ul加滚动播放
+            var target = - count * box.offsetWidth;
+            animate(ul, target, 40);
+            // 遍历给小圆点加右箭头对应效果
+            for (var i = 0; i < points.length; i++) {
+                points[i].className = "";
+            }
+                // 如果跳转数小于尾数
+            if (count < imgs.length - 1) {
+                points[count].className = "now"
+            } else {
+                points[0].className = "now";
+            } 
+        }
+
+        // 左箭头点击事件
+        leftArr.onclick = function () {
+            // 判断点到末尾情况
+            if (count <= 0) {
+                count = imgs.length - 1;
+                ul.style.left = - count * box.offsetWidth + "px";
+            }
+            count--;
+            // 给ul加滚动播放
+            var target = - count * box.offsetWidth;
+            animate(ul, target, 40);
+            // 遍历给小圆点加左箭头对应效果
+            for (var i = 0; i < points.length; i++) {
+                points[i].className = "";
+            }
+            // 如果跳转数小于尾数
+            if (count >= 0) {
+                points[count].className = "now"
+            } else {
+                points[imgs.length - 1].className = "now";
+            }
+            
+        }
+        for (var i = 0; i < points.length; i++) {
+            points[i].index = i;
+            points[i].onclick = function () {
+                for (var i = 0; i < points.length; i++) {
+                    points[i].className = "";
+                }
+                if (count = imgs.length) {
+                    count = 0;
+                    ul.style.left = 0
+                }
+                // if (count = 0) {
+                //     count = imgs.length - 1;
+                //     ul.style.left = - count * box.offsetWidth + "px";
+                // }
+                this.className = "now";
+                count = this.index;
+                console.log(this.index);
+                
+                var target = - this.index * box.offsetWidth;
+                animate(ul, target, 40);
+
+            }            
+        }
+    </script>
+</body>
+</html>

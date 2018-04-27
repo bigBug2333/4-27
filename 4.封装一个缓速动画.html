@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        function animate2(element,target) {
+            clearInterval(element.timeId);
+            element.timeId = setInterval( function() {
+                var current = element.offsetWidth;
+                var step = (target - current) / 10;
+                step = step > 0 ? Math.ceil(step) : Math.floor(step);
+
+                current += step;
+                element.style.left = current + "px";
+
+                if (current == target) {
+                clearInterval(element.timeId);
+                }
+                //console.log("代码还在执行吗");
+
+            },15);
+        }
+    </script>
+</body>
+</html>
